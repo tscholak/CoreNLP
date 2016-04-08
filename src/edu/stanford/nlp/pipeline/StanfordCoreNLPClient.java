@@ -376,7 +376,7 @@ public class StanfordCoreNLPClient extends AnnotationPipeline  {
           }
           // 3. Fire off the request
           connection.getOutputStream().write(message);
-//          log.info("Wrote " + message.length + " bytes to " + backend.host + ":" + backend.port);
+          //log.info("Wrote " + message.length + " bytes to " + backend.host + ":" + backend.port);
           os.close();
 
           // 4. Await a response
@@ -393,11 +393,14 @@ public class StanfordCoreNLPClient extends AnnotationPipeline  {
 
           // 6. Call the callback
           callback.accept(annotation);
-        } catch (IOException e) {
-          throw new RuntimeIOException("Could not connect to server: " + backend.host + ":" + backend.port, e);
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) { // catch (IOException e) {
           e.printStackTrace();
-        }
+          isFinishedCallback.accept(backend);
+          callback.accept(annotation);
+          // throw new RuntimeIOException("Could not connect to server: " + backend.host + ":" + backend.port, e);
+        } // catch (ClassNotFoundException e) {
+        //   e.printStackTrace();
+        // }
       }
     }.start());
   }
